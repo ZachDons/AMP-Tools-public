@@ -16,11 +16,11 @@ int main(int argc, char** argv) {
     /*    Randomly generate the problem     */ 
 
     // Use WO1 from Exercise 2
-   // Problem2D problem = HW2::getWorkspace1();
+   Problem2D problem = HW2::getWorkspace1();
 
     // Use WO1 from Exercise 2
     
-    Problem2D problem = HW2::getWorkspace2();
+    //Problem2D problem = HW2::getWorkspace2();
     
 
     // Make a random environment spec, edit properties about it such as the number of obstacles
@@ -40,7 +40,9 @@ int main(int argc, char** argv) {
     
     {
         // Call your algorithm on the problem
+        //amp::Path2D wut = algo.plan(problem);
         amp::Path2D path = algo.plan(problem);
+
         
         LOG("Waypoint size: " << path.waypoints.size());
 
@@ -70,13 +72,13 @@ int main(int argc, char** argv) {
 
     Visualizer::showFigures();
 
-    HW2::grade(algo, "nonhuman.biologic@myspace.edu", argc, argv);
+    //HW2::grade(algo, "zachary.donovan@colorado.edu", argc, argv);
     
     /* If you want to reconstruct your bug algorithm object every trial (to reset member variables from scratch or initialize), use this method instead*/
     //HW2::grade<MyBugAlgorithm>("nonhuman.biologic@myspace.edu", argc, argv, constructor_parameter_1, constructor_parameter_2, etc...);
     
     // This will reconstruct using the default constructor every trial
-    //HW2::grade<MyBugAlgorithm>("nonhuman.biologic@myspace.edu", argc, argv);
+    //HW2::grade<MyBugAlgorithm>("zachary.donovan@colorado.edu", argc, argv); // DO ME!
 
     return 0;
 }

@@ -9,106 +9,35 @@ amp::Path2D MyBugAlgorithm::plan(const amp::Problem2D &problem)
 {
     LOG("Starting bug algorithm...");
 
-    // // //////////////////
-    // // ///// Bug 2: /////
-    // // //////////////////
-
-    // // Set bug inital position
-    // path.waypoints.push_back(problem.q_init);
-    // bug_position = problem.q_init; // bug start postion
-    // Eigen::Vector2d start_init(0, 0.1);
-    // bug_position = bug_position+start_init;
-
-    // // Initial heading to goal
-    // vec_init_to_goal = (problem.q_goal - problem.q_init);    // vector from q_init to q_goal
-    // Eigen::Vector2d unit_vec_init_to_goal = vec_init_to_goal.normalized();     // Compute unit vector from q_init to q_goal
-    // double mag_init_to_goal = vec_init_to_goal.norm();     // distance from q_init to q_goal
-
-    // // Create bug parameters
-    // bug_step_len = mag_init_to_goal / 500;     // set the bug step distance
-    // bug_rot_angle = (std::numbers::pi) / (10); // bug rotation amount
-
-    // // Create bug antenna parameters
-    // tenna_mag = bug_step_len + (bug_step_len * 0.15); // antenna size is 5% longer than step size
-    // tenna_rot_angle = -(std::numbers::pi) / 2; // 90deg CW rotation of right antenna
-    // // Create bug antennas
-    // front_tenna_pos = bug_position + (unit_vec_init_to_goal * tenna_mag);                              // antenna directly in front of bug
-    // Eigen::Vector2d right_tenna_vector = RotMat((unit_vec_init_to_goal * tenna_mag), tenna_rot_angle); // rotate antenna 90deg to the right
-    // right_tenna_pos = bug_position + right_tenna_vector;                                               // antenna to the right of bug
-
-    // // While loop paramters
-    // int max_loop_size = 500; // bug start iteration
-    // for (int i_loop = 0; i_loop < max_loop_size; i_loop++) // bug_position != problem.q_goal
-    // {
-    //     // Definition of reaching goal
-    //     double di_to_goal = (problem.q_goal - bug_position).norm(); // distance from q_Li to q_goal
-
-    //     // Conditional values
-    //     bool goal_reached = (di_to_goal < bug_step_len); // boolean for if the goal is reached
-    //     bool obstacle_hit = is_in_obstacles(problem, front_tenna_pos);
-
-    //     // Take a step if the goal has not been reached AND we do not hit an obstacle
-    //     if (goal_reached)
-    //     {
-    //         LOG("Main loop. You reached the goal!");
-    //         path.waypoints.push_back(problem.q_goal);
-    //         return path;
-    //     }
-    //     else if (obstacle_hit)
-    //     {
-    //         LOG("Main loop. Hit obstacle. Enter Circumnavigate.");
-    //         //LOG("Bug Pos: " << bug_position << " Front Antenna: " << front_tenna_pos << " Right Antenna: " << right_tenna_pos);
-    //         // Circumnavigate the obstacle
-    //         CircumnavigateBug2(problem);
-    //         ReOrientBug2(problem);
-
-    //         //break;
-    //         // Go to Leave Point
-    //         // GoToLeavePoint(problem);
-
-    //     }
-    //     else // Go toward goal
-    //     {
-    //         //LOG("Main loop: Take Step");
-    //         // Find the direction to the goal
-    //         Eigen::Vector2d bug_vec_to_goal = (problem.q_goal - bug_position);
-    //         Eigen::Vector2d bug_unitvec_to_goal = bug_vec_to_goal.normalized();
-    //         // Take a step in direction of goal (along m-line), update bug and antenna position
-    //         TakeStep(bug_unitvec_to_goal);
-    //     }
-    // }
-
-    // return path;
-
     // //////////////////
-    // ///// Bug 1: /////
+    // ///// Bug 2: /////
     // //////////////////
 
     // Set bug inital position
     path.waypoints.push_back(problem.q_init);
     bug_position = problem.q_init; // bug start postion
     Eigen::Vector2d start_init(0, 0.1);
-    bug_position = bug_position + start_init;
+    bug_position = bug_position+start_init;
 
     // Initial heading to goal
-    vec_init_to_goal = (problem.q_goal - problem.q_init);                  // vector from q_init to q_goal
-    Eigen::Vector2d unit_vec_init_to_goal = vec_init_to_goal.normalized(); // Compute unit vector from q_init to q_goal
-    double mag_init_to_goal = vec_init_to_goal.norm();                     // distance from q_init to q_goal
+    vec_init_to_goal = (problem.q_goal - problem.q_init);    // vector from q_init to q_goal
+    Eigen::Vector2d unit_vec_init_to_goal = vec_init_to_goal.normalized();     // Compute unit vector from q_init to q_goal
+    double mag_init_to_goal = vec_init_to_goal.norm();     // distance from q_init to q_goal
 
     // Create bug parameters
     bug_step_len = mag_init_to_goal / 500;     // set the bug step distance
-    bug_rot_angle = (std::numbers::pi) / (20); // bug rotation amount
+    bug_rot_angle = (std::numbers::pi) / (10); // bug rotation amount
 
     // Create bug antenna parameters
     tenna_mag = bug_step_len + (bug_step_len * 0.15); // antenna size is 5% longer than step size
-    tenna_rot_angle = -(std::numbers::pi) / 2;        // 90deg CW rotation of right antenna
+    tenna_rot_angle = -(std::numbers::pi) / 2; // 90deg CW rotation of right antenna
     // Create bug antennas
     front_tenna_pos = bug_position + (unit_vec_init_to_goal * tenna_mag);                              // antenna directly in front of bug
     Eigen::Vector2d right_tenna_vector = RotMat((unit_vec_init_to_goal * tenna_mag), tenna_rot_angle); // rotate antenna 90deg to the right
     right_tenna_pos = bug_position + right_tenna_vector;                                               // antenna to the right of bug
 
     // While loop paramters
-    int max_loop_size = 500;                               // bug start iteration
+    int max_loop_size = 500; // bug start iteration
     for (int i_loop = 0; i_loop < max_loop_size; i_loop++) // bug_position != problem.q_goal
     {
         // Definition of reaching goal
@@ -123,30 +52,107 @@ amp::Path2D MyBugAlgorithm::plan(const amp::Problem2D &problem)
         {
             LOG("Main loop. You reached the goal!");
             path.waypoints.push_back(problem.q_goal);
+            double path_size = bug_step_len * path.waypoints.size(); 
+            LOG("Path size: " << path_size);
             return path;
         }
         else if (obstacle_hit)
         {
             LOG("Main loop. Hit obstacle. Enter Circumnavigate.");
-            // LOG("Bug Pos: " << bug_position << " Front Antenna: " << front_tenna_pos << " Right Antenna: " << right_tenna_pos);
-            //  Circumnavigate the obstacle
-            Circumnavigate(problem);
+            //LOG("Bug Pos: " << bug_position << " Front Antenna: " << front_tenna_pos << " Right Antenna: " << right_tenna_pos);
+            // Circumnavigate the obstacle
+            CircumnavigateBug2(problem);
+            ReOrientBug2(problem);
+
+            //break;
             // Go to Leave Point
-            GoToLeavePoint(problem);
+            // GoToLeavePoint(problem);
+
         }
         else // Go toward goal
         {
-            // LOG("Main loop: Take Step");
-            //  Find the direction to the goal
+            //LOG("Main loop: Take Step");
+            // Find the direction to the goal
             Eigen::Vector2d bug_vec_to_goal = (problem.q_goal - bug_position);
             Eigen::Vector2d bug_unitvec_to_goal = bug_vec_to_goal.normalized();
             // Take a step in direction of goal (along m-line), update bug and antenna position
             TakeStep(bug_unitvec_to_goal);
         }
     }
-
+    double path_size = bug_step_len * path.waypoints.size(); 
+    LOG("Path size: " << path_size);
     return path;
 }
+//     // //////////////////
+//     // ///// Bug 1: /////
+//     // //////////////////
+
+//     // Set bug inital position
+//     path.waypoints.push_back(problem.q_init);
+//     bug_position = problem.q_init; // bug start postion
+//     Eigen::Vector2d start_init(0, 0.1);
+//     bug_position = bug_position + start_init;
+
+//     // Initial heading to goal
+//     vec_init_to_goal = (problem.q_goal - problem.q_init);                  // vector from q_init to q_goal
+//     Eigen::Vector2d unit_vec_init_to_goal = vec_init_to_goal.normalized(); // Compute unit vector from q_init to q_goal
+//     double mag_init_to_goal = vec_init_to_goal.norm();                     // distance from q_init to q_goal
+
+//     // Create bug parameters
+//     bug_step_len = mag_init_to_goal / 500;     // set the bug step distance
+//     bug_rot_angle = (std::numbers::pi) / (20); // bug rotation amount
+
+//     // Create bug antenna parameters
+//     tenna_mag = bug_step_len + (bug_step_len * 0.15); // antenna size is 5% longer than step size
+//     tenna_rot_angle = -(std::numbers::pi) / 2;        // 90deg CW rotation of right antenna
+//     // Create bug antennas
+//     front_tenna_pos = bug_position + (unit_vec_init_to_goal * tenna_mag);                              // antenna directly in front of bug
+//     Eigen::Vector2d right_tenna_vector = RotMat((unit_vec_init_to_goal * tenna_mag), tenna_rot_angle); // rotate antenna 90deg to the right
+//     right_tenna_pos = bug_position + right_tenna_vector;                                               // antenna to the right of bug
+
+//     // While loop paramters
+//     int max_loop_size = 500;                               // bug start iteration
+//     for (int i_loop = 0; i_loop < max_loop_size; i_loop++) // bug_position != problem.q_goal
+//     {
+//         // Definition of reaching goal
+//         double di_to_goal = (problem.q_goal - bug_position).norm(); // distance from q_Li to q_goal
+
+//         // Conditional values
+//         bool goal_reached = (di_to_goal < bug_step_len); // boolean for if the goal is reached
+//         bool obstacle_hit = is_in_obstacles(problem, front_tenna_pos);
+
+//         // Take a step if the goal has not been reached AND we do not hit an obstacle
+//         if (goal_reached)
+//         {
+//             LOG("Main loop. You reached the goal!");
+//             path.waypoints.push_back(problem.q_goal);
+//             double path_size = bug_step_len * path.waypoints.size(); 
+//             LOG("Path size: " << path_size);
+//             return path;
+//         }
+//         else if (obstacle_hit)
+//         {
+//             LOG("Main loop. Hit obstacle. Enter Circumnavigate.");
+//             // LOG("Bug Pos: " << bug_position << " Front Antenna: " << front_tenna_pos << " Right Antenna: " << right_tenna_pos);
+//             //  Circumnavigate the obstacle
+//             Circumnavigate(problem);
+//             // Go to Leave Point
+//             GoToLeavePoint(problem);
+//         }
+//         else // Go toward goal
+//         {
+//             // LOG("Main loop: Take Step");
+//             //  Find the direction to the goal
+//             Eigen::Vector2d bug_vec_to_goal = (problem.q_goal - bug_position);
+//             Eigen::Vector2d bug_unitvec_to_goal = bug_vec_to_goal.normalized();
+//             // Take a step in direction of goal (along m-line), update bug and antenna position
+//             TakeStep(bug_unitvec_to_goal);
+//         }
+//     }
+//     double path_size = bug_step_len * path.waypoints.size(); 
+//     LOG("Path size: " << path_size);
+//     return path;
+// }
 
 //     // //////////////////
 //     // ///// Bug 2: /////
@@ -210,7 +216,12 @@ void MyBugAlgorithm::CircumnavigateBug2(const amp::Problem2D &problem)
             LOG("ZACH ERROR: You hit the ELSE STATEMENT in the Maneuver Phase");
         }
 
-        // Update while loop conditional criteria
+        // Break while loop timeout
+        if (circumnav_step_iteration>1000)
+        {
+            break;
+        }
+
 
         // Angle between bug->goal and init->goal
         Eigen::Vector2d vec_bug_to_goal = problem.q_goal - bug_position;
@@ -419,7 +430,11 @@ void MyBugAlgorithm::Circumnavigate(const amp::Problem2D &problem)
         {
             LOG("ZACH ERROR: You hit the ELSE STATEMENT in the Maneuver Phase");
         }
-
+        // Break while loop timeout
+        if (circumnav_step_iteration>10000)
+        {
+            break;
+        }
         // Update while loop conditional criteria
 
         // Distance from hit point to bugs position aroud obstacle
