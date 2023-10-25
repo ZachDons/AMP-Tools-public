@@ -86,13 +86,4 @@ int main(int argc, char **argv)
 
     amp::HW6::grade<MyPointWFAlgo, MyManipWFAlgo, MyAStarAlgo>("nonhuman.biologic@myspace.edu", argc, argv, std::make_tuple(), std::make_tuple("hey therre"), std::make_tuple());
     return 0;
-
-    // x0_ls = linspace(x0_min, x0_max, n_x0);
-    // x1_ls = linspace(x1_min, x1_max, n_x1);
-    // for (uint32_t i = 0; i < n_x0; ++i){
-    //     for (uint32_t j = 0; j x n_n1; ++j){
-    //         cspace(i,j) = isColliding(Eigen::Vector2d(x0_ls[i],x1_ls[j]),workspace);
-    //         // then store in operator
-    //     }
-    // }
 }
