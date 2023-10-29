@@ -13,11 +13,6 @@ using namespace amp;
 
 void problem1a()
 {
-
-    // Problem2D problem = HW2::getWorkspace1();
-    // MyConfigurationSpace config_space(60, 60, problem.x_min, problem.x_max, problem.y_min, problem.y_max);
-    // config_space.compute_Cspace(problem.obstacles);
-
     Problem2D problem = HW2::getWorkspace1();
     MyPointWFAlgo algo;
     std::unique_ptr<amp::GridCSpace2D> config_space = algo.constructDiscretizedWorkspace(problem);
@@ -35,15 +30,25 @@ void problem1b()
     Visualizer::makeFigure(problem, path);
     Visualizer::makeFigure(*config_space);
 }
-// void problem2()
-// {
-//     Problem2D problem = HW4::getEx3Workspace3();
-//     MyPointWFAlgo algo;
-//     std::unique_ptr<amp::GridCSpace2D> config_space = algo.constructDiscretizedWorkspace(problem);
-//     amp::Path2D path = algo.planInCSpace(problem.q_init, problem.q_goal, *config_space);
-//     // int grid_init[x0_cells, x1_cells]
-//     Visualizer::makeFigure(*config_space);
-// }
+void problem2a()
+{
+    Problem2D problem = HW2::getWorkspace1();
+    MyPointWFAlgo algo;
+    std::unique_ptr<amp::GridCSpace2D> config_space = algo.constructDiscretizedWorkspace(problem);
+    amp::Path2D path = algo.planInCSpace(problem.q_init, problem.q_goal, *config_space);
+    Visualizer::makeFigure(*config_space);
+    Visualizer::makeFigure(problem, path);
+}
+
+void problem2b()
+{
+    Problem2D problem = HW2::getWorkspace2();
+    MyPointWFAlgo algo;
+    std::unique_ptr<amp::GridCSpace2D> config_space = algo.constructDiscretizedWorkspace(problem);
+    amp::Path2D path = algo.planInCSpace(problem.q_init, problem.q_goal, *config_space);
+    Visualizer::makeFigure(problem, path);
+    Visualizer::makeFigure(*config_space);
+}
 
 void problem3a()
 {
