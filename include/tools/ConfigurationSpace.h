@@ -37,7 +37,7 @@ class ConfigurationSpace {
 
         /// @brief Get the dimension of the configuration space
         /// @return Dimension
-        inline const std::size_t dimension() const {return m_lower_bounds.size();}
+        inline std::size_t dimension() const {return m_lower_bounds.size();}
 
     protected:
         Eigen::VectorXd m_lower_bounds;
