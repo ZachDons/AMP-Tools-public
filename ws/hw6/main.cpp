@@ -76,9 +76,9 @@ int main(int argc, char **argv)
 {
     // problem1a();
     // problem1b();
-    //   problem2();
-    //problem3a();
-    //problem3b();
+    // problem2();
+    // problem3a();
+    // problem3b();
 
     // Visualizer::showFigures();
     // amp::RNG::seed(amp::RNG::randiUnbounded());

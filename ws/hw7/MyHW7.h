@@ -14,23 +14,27 @@ using std::cout, std::vector, Eigen::Vector2d;
 class MyPRM2D : public amp::PRM2D, public GenericPRM
 {
 public:
-    MyPRM2D(int n, int r) : amp::PRM2D(), n(n), r(r) {}
+    MyPRM2D(int n, double r, bool smoothing) : GenericPRM(n, r, smoothing) {}
     virtual amp::Path2D plan(const amp::Problem2D &problem) override;
 
 private:
     int n;
-    int r;
+    double r;
+    bool smoothing;
 };
 
-class MyRRT2D : public amp::GoalBiasRRT2D, public GenericRRT
+class MyGoalBiasRRT2D : public amp::GoalBiasRRT2D, public GenericRRT
 {
 public:
-    MyRRT2D(int n, int r) : amp::GoalBiasRRT2D(), n(n), r(r) {}
+    MyGoalBiasRRT2D(int n, double r, double p_goal, double epsilon, bool smoothing) : GenericRRT(n, r, p_goal, epsilon, smoothing) {}
     virtual amp::Path2D plan(const amp::Problem2D &problem) override;
 
 private:
     int n;
-    int r;
+    double r;
+    double p_goal;
+    double epsilon;
+    bool smoothing;
 };
 // << RRT
 

@@ -3,6 +3,7 @@
 
 MyAStarAlgo::GraphSearchResult MyAStarAlgo::search(const amp::ShortestPathProblem &problem, const amp::SearchHeuristic &heuristic)
 {
+    LOG("Astar running...");
     GraphSearchResult path;
     MyNode starting_node;
     starting_node.nodeID = problem.init_node;
@@ -11,13 +12,18 @@ MyAStarAlgo::GraphSearchResult MyAStarAlgo::search(const amp::ShortestPathProble
     open_list.push_back(starting_node);
     MyNode ending_node;
     ending_node.nodeID = problem.goal_node;
-    //LOG("START NODE: ID=" << starting_node.nodeID);
+    LOG("START NODE: ID=" << starting_node.nodeID);
+    LOG("GOAL NODE: ID=" << ending_node.nodeID);
     vector<amp::Node> test_child = problem.graph->children(starting_node.nodeID);
-    //LOG("After start node assignment");
+    LOG("After child pointer assignment");
+    // for (auto node : problem.graph->nodes())
+    //     DEBUG(" - " << node);
+    // PAUSE;
 
     MyNode current_node;
     int cnt = 0;
     int break_cnt = 15000;
+    LOG("Entering while loop...");
     while (open_list.size() > 0)
     {
         current_node = open_list.front(); // pick n_best
@@ -27,7 +33,7 @@ MyAStarAlgo::GraphSearchResult MyAStarAlgo::search(const amp::ShortestPathProble
 
         if (current_node.nodeID == ending_node.nodeID)
         {
-            // LOG("GOAL REACHED! Total iterations: " << cnt);
+            LOG("GOAL REACHED! Total iterations: " << cnt);
             path.success = true;
             break;
         }
@@ -35,9 +41,10 @@ MyAStarAlgo::GraphSearchResult MyAStarAlgo::search(const amp::ShortestPathProble
         MyNode i_node;
         bool in_closed_list;
         bool in_open_list;
-        //LOG("Before child node assignment");
+        LOG("Before child node assignment");
         vector<amp::Node> childrenID = problem.graph->children(current_node.nodeID);
-        //LOG("After child node assignment");
+        LOG("after child node assignment");
+        LOG("Number of Children: "<<childrenID.size());
         vector<double> childrenPathCost = problem.graph->outgoingEdges(current_node.nodeID);
         for (int i_child = 0; i_child < childrenID.size(); i_child++)
         {
@@ -45,7 +52,7 @@ MyAStarAlgo::GraphSearchResult MyAStarAlgo::search(const amp::ShortestPathProble
             i_node.pathCost = current_node.pathCost + childrenPathCost[i_child];
             i_node.priority = i_node.pathCost + heuristic(i_node.nodeID);
             i_node.parent = current_node.nodeID;
-            // LOG("ITERATION: " << i_child);
+            LOG("ITERATION: " << i_child);
             // LOG("NodeID = " << i_node.nodeID << " | Path Cost = " << i_node.pathCost << " | Priority = " << i_node.priority);
 
             in_closed_list = isNodeInList(i_node, closed_list);
@@ -60,7 +67,7 @@ MyAStarAlgo::GraphSearchResult MyAStarAlgo::search(const amp::ShortestPathProble
                 {
                     // LOG("Caveat triggered...");
                     MyNode previous_node = findNodeByID(open_list, i_node.nodeID);
-                    // LOG("PREVIOUS: NodeID = " << previous_node.nodeID << " | Path Cost = " << previous_node.pathCost << " | Priority = " << previous_node.priority);
+                    LOG("PREVIOUS: NodeID = " << previous_node.nodeID << " | Path Cost = " << previous_node.pathCost << " | Priority = " << previous_node.priority);
                     //  double best_iNode_priority = open_list[i_node.nodeID].priority;
                     if (i_node.pathCost < (previous_node.pathCost))
                     {
@@ -69,74 +76,39 @@ MyAStarAlgo::GraphSearchResult MyAStarAlgo::search(const amp::ShortestPathProble
                         // LOG("NEW: NodeID = " << i_node.nodeID << " | Path Cost = " << i_node.pathCost << " | Priority = " << i_node.priority);
                         // LOG("Caveat completed.");
                     }
-                    // LOG("Caveat triggered...");
-                    // MyNode previous_node = findNodeByID(open_list, i_node.nodeID);
-                    // LOG("PREVIOUS: NodeID = " << previous_node.nodeID << " | Path Cost = " << previous_node.pathCost << " | Priority = " << previous_node.priority);
-                    // // double best_iNode_priority = open_list[i_node.nodeID].priority;
-                    // if (i_node.pathCost < (previous_node.pathCost))
-                    // {
-                    //     // MyNode best_node = findNodeByID(open_list, i_node.nodeID);
-                    //     // i_node.pathCost = previous_node.pathCost;
-                    //     // i_node.priority = previous_node.priority;
-                    //     // i_node.parent = previous_node.parent;
-                    //     removeNodeByID(open_list, previous_node.nodeID);
-                    //     previous_node.pathCost = i_node.pathCost;
-                    //     previous_node.priority = i_node.priority;
-                    //     previous_node.parent = i_node.parent;
-                    //     // open_list.erase(previous_node.nodeID);
-                    //     open_list.push_back(previous_node);
-                    //     LOG("PREVIOUS: NodeID = " << previous_node.nodeID << " | Path Cost = " << previous_node.pathCost << " | Priority = " << previous_node.priority);
-
-                    //     LOG("Caveat completed.");
-                    // }
                 }
             }
         }
-        // LOG("Pre-sorted open list:");
-        // for (int ii = 0; ii < open_list.size(); ii++)
-        // {
-        //     LOG(open_list[ii].nodeID);
-        // }
-
+        LOG("1");
         sortOpenList(open_list);
-
-        // LOG("Post-sorted open list:");
-        // for (int ii = 0; ii < open_list.size(); ii++)
-        // {
-        //     LOG(open_list[ii].nodeID);
-        // }
-
-        // if (cnt > break_cnt)
-        // {
-        //     LOG("Main while Loop break...");
-        //     break;
-        // }
-        // cnt++;
+        LOG("2");
     }
 
-    // LOG("FINAL CLOSED LIST:");
-
-    MyNode copy_node;
-    amp::Node copy_node_id = ending_node.nodeID;
-    cnt = 0;
-    while (!(copy_node_id == starting_node.nodeID))
+    if (path.success)
     {
-        path.node_path.push_front(copy_node_id);
-        // LOG(copy_node_id);
-        copy_node = findNodeByID(closed_list, copy_node_id);
-        copy_node_id = copy_node.parent;
-        // LOG("parent->" << copy_node_id);
-        if (cnt > break_cnt)
+        MyNode copy_node;
+        amp::Node copy_node_id = ending_node.nodeID;
+        cnt = 0;
+        while (!(copy_node_id == starting_node.nodeID))
         {
-            // LOG("Copy while Loop break...");
-            break;
+            path.node_path.push_front(copy_node_id);
+            // LOG(copy_node_id);
+            copy_node = findNodeByID(closed_list, copy_node_id);
+            copy_node_id = copy_node.parent;
+            // LOG("parent->" << copy_node_id);
+            if (cnt > break_cnt)
+            {
+                // LOG("Copy while Loop break...");
+                break;
+            }
+            cnt++;
         }
-        cnt++;
-    }
-    path.node_path.push_front(starting_node.nodeID);
+        path.node_path.push_front(starting_node.nodeID);
 
-    MyNode the_last_node = findNodeByID(closed_list, ending_node.nodeID);
-    path.path_cost = the_last_node.pathCost;
+        MyNode the_last_node = findNodeByID(closed_list, ending_node.nodeID);
+        path.path_cost = the_last_node.pathCost;
+    }
+
     // LOG("TOTAL PATH LENGTH: " << path.path_cost);
     // LOG("START NODE: ID=" << starting_node.nodeID);
     // LOG("END NODE: ID=" << ending_node.nodeID);
